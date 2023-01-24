@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Paschalis Agapitos">
+
+<title>Cultural Analytics Open Science Guide - 45&nbsp; Exploratory Data Analysis and Summary Statistics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../code/28-Association-Between-Variables.html" rel="next">
+<link href="../code/26-Data-Information.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis and Summary Statistics</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-center sidebar-header sidebar-header-stacked">
+      <a href="../" class="sidebar-logo-link">
+      <img src="../images/dh_gro_logo.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Cultural Analytics Open Science Guide</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="" title="Personal account" id="sidebar-tool-dropdown-0" class="sidebar-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i></a>
+    <ul class="dropdown-menu" aria-labelledby="sidebar-tool-dropdown-0">
+        <li>
+          <a class="dropdown-item sidebar-tools-main-item" href="https://signon.rug.nl/nidp/app/login?id=100&amp;sid=2&amp;option=credential&amp;sid=2">
+          Login to your student account
+          </a>
+        </li>
+    </ul>
+    <a href="https://github.com/GroningenDH/Cultural-Analytics-Open-Science-Guide" title="Source Code" class="sidebar-tool px-1"><i class="bi bi-github"></i></a>
+    <a href="https://www.rug.nl/research/research-let/expertisecentra/centre-for-digital-humanities/" title="Center for Digital Humanities - University of Groningen" class="sidebar-tool px-1"><i class="bi bi-house"></i></a>
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">Introduction</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/00-Datasets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Datasets</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../code/version_control.html" class="sidebar-item-text sidebar-link">Version Control</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/01-The-Command-Line.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">The Command Line</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/README_file.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">README file</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-workflow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">General Workflow of a Version Control System (VCS)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/12-Git-GitHub.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Git and GitHub</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/set-up-git-and-github.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Create a GitHub Account</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/github-flow.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Github Flow</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-git-commit.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">The <code>git commit</code> Command</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-git-compare.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Retrieving and Comparing Versions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-git-branches.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Branches and Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-git-merge.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Merging Branches in Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-git-interactive.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Interactive, Visual Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-github.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Git Commands to Work on GitHub</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/the-clone-wars.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">The Clone Wars</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-git-summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Git Summary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/vcs-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Version Control for Data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../code/02-Data-Analysis.html" class="sidebar-item-text sidebar-link">Data Analysis (Pandas)</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/03-Pandas-Basics-Part1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Pandas Basics — Part 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/03.5-Pandas-Basics-Part1-WORKBOOK.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Pandas Basics Part 1 — Workbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/04-Pandas-Basics-Part2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Pandas Basics — Part 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/04.5-Pandas-Basics-Part2-WORKBOOK.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Pandas Basics Part 2 — Workbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/05-Pandas-Basics-Part3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Pandas Basics — Part 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/05.5-Pandas-Basics-Part3-WORKBOOK.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Pandas Basics Part 3 — Workbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/06-Pandas-Basics-More-Methods-WORKBOOK.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Pandas Basics — More Useful Methods — Workbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/07-Pandas-Merge-Datasets.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Pandas — Merge Datasets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../code/08-Data-Collection.html" class="sidebar-item-text sidebar-link">Data Collection</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/09-User-Ethics-Legal-Concerns.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Users’ Data: Legal &amp; Ethical Considerations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/10-Web-Scraping-Part1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Web Scraping — Part 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/10.5-Web-Scraping-Part1-WORKBOOK.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Web Scraping Part 1 — Workbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/11-Web-Scraping-Part2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Web Scraping — Part 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/11.5-Web-Scraping-Part2-Workbook.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Web Scraping — Part 2 — Workbook</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/13-What-Is-API.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Application Programming Interfaces (APIs)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/13.5-APIs-WORKBOOK.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">APIs — Workbook</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Data collection examples</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/14-Song-Genius.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Song Genius Data Collection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/15-Genius-API.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Song Genius API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/16-Collect-Genius-Lyrics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Song Lyrics Collection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/17-Lyrics-Analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Song Lyrics Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/18-Twitter.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Twitter Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/19-Twitter-API-Setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Twitter API Setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/20-Twitter-Data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Twitter Data Collection &amp; Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/21-Twitter-Data-Sharing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Twitter Data Sharing</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/22-Reddit-Data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Reddit Data Collection and Analysis with PSAW</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Exploratory Data Analysis (in-depth)</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/23-Data-Types-and-Quality.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Data Types and Quality of the Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/24-Changing-Numerical-Variable-Data-Types.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Tips for recognizing the data types</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/25-Changing-Categorical-Variable-Data-Type.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Categorical Variable Data Type</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/26-Data-Information.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Data Information</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/27-EDA-Summary-Statistics.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis and Summary Statistics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../code/28-Association-Between-Variables.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Association between variables</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">45.1</span>  Introduction</a></li>
+  <li><a href="#univariate-statistics" id="toc-univariate-statistics" class="nav-link" data-scroll-target="#univariate-statistics"><span class="toc-section-number">45.2</span>  Univariate Statistics</a>
+  <ul>
+  <li><a href="#quantitative-variables" id="toc-quantitative-variables" class="nav-link" data-scroll-target="#quantitative-variables"><span class="toc-section-number">45.2.1</span>  Quantitative variables</a>
+  <ul class="collapse">
+  <li><a href="#central-location" id="toc-central-location" class="nav-link" data-scroll-target="#central-location"><span class="toc-section-number">45.2.1.1</span>  Central location</a></li>
+  <li><a href="#spread" id="toc-spread" class="nav-link" data-scroll-target="#spread"><span class="toc-section-number">45.2.1.2</span>  Spread</a></li>
+  </ul></li>
+  <li><a href="#categorical-variables" id="toc-categorical-variables" class="nav-link" data-scroll-target="#categorical-variables"><span class="toc-section-number">45.2.2</span>  Categorical Variables</a></li>
+  </ul></li>
+  <li><a href="#bivariate-statistics" id="toc-bivariate-statistics" class="nav-link" data-scroll-target="#bivariate-statistics"><span class="toc-section-number">45.3</span>  Bivariate Statistics</a></li>
+  <li><a href="#relationship-between-types-of-variables" id="toc-relationship-between-types-of-variables" class="nav-link" data-scroll-target="#relationship-between-types-of-variables"><span class="toc-section-number">45.4</span>  Relationship between types of variables</a>
+  <ul>
+  <li><a href="#one-quantitative-variable-and-one-categorical-variable" id="toc-one-quantitative-variable-and-one-categorical-variable" class="nav-link" data-scroll-target="#one-quantitative-variable-and-one-categorical-variable"><span class="toc-section-number">45.4.1</span>  One Quantitative Variable and One Categorical Variable</a></li>
+  <li><a href="#two-quantitative-variables" id="toc-two-quantitative-variables" class="nav-link" data-scroll-target="#two-quantitative-variables"><span class="toc-section-number">45.4.2</span>  Two Quantitative Variables</a></li>
+  <li><a href="#two-categorical-variables" id="toc-two-categorical-variables" class="nav-link" data-scroll-target="#two-categorical-variables"><span class="toc-section-number">45.4.3</span>  Two Categorical Variables</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis and Summary Statistics</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source" data-quarto-source-url="https://github.com/GroningenDH/Cultural-Analytics-Open-Science-Guide"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Paschalis Agapitos </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2" data-number="45.1">
+<h2 data-number="45.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">45.1</span> Introduction</h2>
+<p>The summary statistics are very useful for an Exploratory Data Analysis (henceforward: <em>EDA</em>) since they allow us to condense a large amount of information and make it a little bit more interpretable since we will just look at a few numbers.</p>
+<p>When we want to decide what kind of information we would like to use, we need to have in mind two important aspects-questions:</p>
+<ul>
+<li>the <strong>research question</strong> (and how many variables this question involves)</li>
+<li>the <strong>data</strong> (if it is quantitative or categorical)</li>
+</ul>
+</section>
+<section id="univariate-statistics" class="level2" data-number="45.2">
+<h2 data-number="45.2" class="anchored" data-anchor-id="univariate-statistics"><span class="header-section-number">45.2</span> Univariate Statistics</h2>
+<p>Summary statistics that focus on only one variable are called <em>univariate statistics</em>.</p>
+<p>For example, let’s say that we have a dataset about books of a specific bookstore and in this dataset there is a column that contains the price of each book. (data)</p>
+<p>Our question is how much does a book cost on average in this bookstore.</p>
+<p>To do that we need to calculate the mean of the values in the prices column, thus we need to focus only in one variable; therefore this summary statistic is called <em>univariate</em>.</p>
+<section id="quantitative-variables" class="level3" data-number="45.2.1">
+<h3 data-number="45.2.1" class="anchored" data-anchor-id="quantitative-variables"><span class="header-section-number">45.2.1</span> Quantitative variables</h3>
+<p>When we have to deal with quantitative variables, usually we need to describe the <em>central location</em> (centrality) and <em>spread</em> (spreadness) of the values of these variables.</p>
+<section id="central-location" class="level4" data-number="45.2.1.1">
+<h4 data-number="45.2.1.1" class="anchored" data-anchor-id="central-location"><span class="header-section-number">45.2.1.1</span> Central location</h4>
+<p>By finding the <em>central location</em> (aka central tendency) we find the “typical” value of a variable. There are a lot of methods to find this typical value:</p>
+<ul>
+<li><strong>Mean</strong>: (aka average) the value that derives from the sum of all values divided by the number (i.e., the length) of the values.</li>
+<li><strong>Median</strong>: the middle value of a variable when the values are sorted.</li>
+<li><strong>Mode</strong>: the most frequent value of the variable</li>
+<li><strong>Trimmed mean</strong>: the mean excluding x percent of the lowest and highest data points.</li>
+</ul>
+<p>Sometimes in order to choose the most appropriate summary statistic for a variable we need to combine it with a visualization and domain knowledge.</p>
+<p>For example, let’s assume that we get the following values as summary statistics from a variable of cars’ prices:</p>
+<ul>
+<li>Mean = Rs. 63827.18</li>
+<li>Median = Rs. 45000.00</li>
+<li>Mode = Rs. 30000.00</li>
+<li>Trimmed Mean = Rs. 47333.61</li>
+</ul>
+<p>If we look closely at these values, we will observe that the mean is so much larger than the median and the trimmed mean, which might means that there are some outliers in the dataset.</p>
+</section>
+<section id="spread" class="level4" data-number="45.2.1.2">
+<h4 data-number="45.2.1.2" class="anchored" data-anchor-id="spread"><span class="header-section-number">45.2.1.2</span> Spread</h4>
+<p>Spread, or dispersion, describes the variability within a feature. This is important because it provides context for measures of central location. For example, if there is a lot of variability in car prices, we can be less certain that any particular car will be close to 450000.00 Rupees (the median price). Like the central location measures, there are a few values that can describe the spread:</p>
+<ul>
+<li>Range: The difference between the maximum and minimum values in a variable.</li>
+<li>Inter-Quartile Range (IQR): The difference between the 75th and 25th percentile values.</li>
+<li>Variance: The average of the squared distance from each data point to the mean.</li>
+<li>Standard Deviation (SD): The square root of the variance.</li>
+<li>Mean Absolute Deviation (MAD): The mean absolute value of the distance between each data point and the mean. e.g.,</li>
+</ul>
+<pre><code># Range  
+data.column_name.max() -&nbsp;data.column_name.min()  </code></pre>
+<pre><code># Interquartile range  
+data.column_name.quantile(0.75) -&nbsp;data.column_name.quantile(0.25)  
+
+# alternative way
+from scipy.stats import iqr  
+iqr(data.column_name)</code></pre>
+<pre><code># Variance  
+data.column_name.var()  </code></pre>
+<pre><code># Standard deviation  
+data.column_name.std()  </code></pre>
+<pre><code># Mean absolute deviation  
+data.column_name.mad()</code></pre>
+<p>Choosing the most appropriate measure of spread is much like choosing a measure of central tendency, in that we need to consider the data holistically. For example, below are measures of spread calculated for&nbsp;<code>selling_price</code>:</p>
+<ul>
+<li>Range: Rs. 9970001</li>
+<li>IQR: Rs. 420001</li>
+<li>Variance: 650044550668.61 (Rs^2)</li>
+<li>Standard Deviation: Rs. 806253.40</li>
+<li>Mean Absolute Deviation: Rs. 42,213.14</li>
+</ul>
+<p>We see that the range is almost 10 million Rupees; however, this could be due to a single 10 million Rupee car in the dataset. If we remove that one car, the range might be much smaller. The IQR is useful in comparison because it trims away outliers.</p>
+<p>Meanwhile, we see that variance is extremely large. This happens because variance is calculated using squared differences, and is therefore not in the same units as the original data, making it less interpretable. Both the standard deviation and MAD solve this issue, but MAD is even less impacted by extreme outliers.</p>
+<p>For highly skewed data or data with extreme outliers, we therefore might prefer to use IQR or MAD. For data that is more normally distributed, the variance and standard deviation are frequently reported.</p>
+</section>
+</section>
+<section id="categorical-variables" class="level3" data-number="45.2.2">
+<h3 data-number="45.2.2" class="anchored" data-anchor-id="categorical-variables"><span class="header-section-number">45.2.2</span> Categorical Variables</h3>
+<p>Categorical variables can be either ordinal (ordered) or nominal (unordered). For ordinal categorical variables, we may still want to summarize central location and spread. However, because ordinal categories are not necessarily evenly spaced (like numbers), we should NOT calculate the mean of an ordinal categorical variable (or anything that relies on the mean, like variance, standard deviation, and MAD).</p>
+<p>For nominal categorical variables (and ordinal categorical variables), another common numerical summary statistic is the frequency or proportion of observations in each category. This is often reported using a frequency table and can be visualized using a bar plot.</p>
+</section>
+</section>
+<section id="bivariate-statistics" class="level2" data-number="45.3">
+<h2 data-number="45.3" class="anchored" data-anchor-id="bivariate-statistics"><span class="header-section-number">45.3</span> Bivariate Statistics</h2>
+<p>In contrast to univariate statistics, bivariate statistics are used to summarize the relationship between two variables. They are useful for answering questions like:</p>
+<ul>
+<li>Do manual transmission cars tend to cost more or less than automatic transmission?</li>
+<li>Do older cars tend to cost less money?</li>
+<li>Are automatic transmission cars more likely to be sold by individuals or dealers?</li>
+</ul>
+<p>Depending on the types of variables we want to summarize a relationship between, we should choose different summary statistics.</p>
+</section>
+<section id="relationship-between-types-of-variables" class="level2" data-number="45.4">
+<h2 data-number="45.4" class="anchored" data-anchor-id="relationship-between-types-of-variables"><span class="header-section-number">45.4</span> Relationship between types of variables</h2>
+<section id="one-quantitative-variable-and-one-categorical-variable" class="level3" data-number="45.4.1">
+<h3 data-number="45.4.1" class="anchored" data-anchor-id="one-quantitative-variable-and-one-categorical-variable"><span class="header-section-number">45.4.1</span> One Quantitative Variable and One Categorical Variable</h3>
+<p>If we want to know whether manual transmission cars tend to cost more or less than automatic transmission cars, we are interested in the relationship between&nbsp;<code>transmission</code>&nbsp;(categorical) and&nbsp;<code>selling_price</code>&nbsp;(quantitative). To answer this question, we can use a <strong>mean or median difference</strong>.</p>
+<p>For example, we could calculate that the median price of automatic transmission cars is 100000 Rupees higher than for manual transmission cars.</p>
+</section>
+<section id="two-quantitative-variables" class="level3" data-number="45.4.2">
+<h3 data-number="45.4.2" class="anchored" data-anchor-id="two-quantitative-variables"><span class="header-section-number">45.4.2</span> Two Quantitative Variables</h3>
+<p>If we want to know whether older cars tend to cost less money, we are interested in the relationship between&nbsp;<code>year</code>&nbsp;and&nbsp;<code>selling_price</code>, both of which are quantitative. To answer this question, we can use the ==Pearson correlation==.</p>
+<p>For example, if we calculate that the correlation between&nbsp;<code>year</code>&nbsp;and&nbsp;<code>selling_price</code>&nbsp;is 0.4, we can conclude that there is a moderate positive association between these variables (older cars do tend to cost less money).</p>
+</section>
+<section id="two-categorical-variables" class="level3" data-number="45.4.3">
+<h3 data-number="45.4.3" class="anchored" data-anchor-id="two-categorical-variables"><span class="header-section-number">45.4.3</span> Two Categorical Variables</h3>
+<p>If we want to know whether automatic transmission cars are more likely to be sold by individuals or dealers, we are interested in the relationship between&nbsp;<code>transmission</code>&nbsp;and&nbsp;<code>seller_type</code>, both of which are categorical. We can explore this relationship using a <strong>contingency table and the Chi-Square statistic</strong>.</p>
+<p>For example, based on the following contingency table, we might conclude that a higher proportion of cars sold by dealers are automatic (compared to cars sold by individuals):</p>
+<pre><code>seller_type   Dealer  Individual  Trustmark Dealer
+transmission                                      
+Automatic        217         212                19
+Manual           777        3032                83</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } 
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../code/26-Data-Information.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Data Information</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../code/28-Association-Between-Variables.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Association between variables</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Cultural Analytics Open Science Guide</div>   
+    <div class="nav-footer-right">powered by <a href="https://quarto.org/">Quarto</a>.</div>
+  </div>
+</footer>
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
